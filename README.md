@@ -1,4 +1,4 @@
-## Maid
+![](docs/header.png)
 
 This piece of software is my personal file and backup management tool.
 
