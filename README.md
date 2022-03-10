@@ -16,6 +16,10 @@ var flattener = new DirectoryFlattener(new OsFileSystem());
 // Moves all files from directories (including subdirectories) in
 // the provided path TO the provided path
 flattener.Flatten("E:\\images");
+
+// by default, Flatten copies files
+// this behavior can be changed
+flattener.Flatten("E:\\images", moveFiles: true);
 ```
 
 > 💡 Will not overwrite other files because if the flattened file name collides with another it is renamed to a new GUID name instead.

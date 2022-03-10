@@ -24,4 +24,5 @@ public static class CommonFilePatterns
     public const string SoundFiles = @".*?\.(3gp|aa|aac|aax|act|aiff|alac|amr|ape|au|awb|dss|dvf|flac|gsm|iklax|ivs|m4a|m4b|m4p|mmf|mp3|mpc|msv|nmf|ogg|oga|mogg|opus|ra|rm|rf64|tta|voc|vox|wav|wma|wv|8svx|cda)";
     public const string ImageFiles = @".*?\.(gif|jpe?g|tiff?|png|webp|bmp)";
     public const string WindowsShortcutFiles = @".*?\.lnk";
+    public const string VideoFiles = @".*?\.(webm|mpg|mkv|flv|vob|ogv|drc|gifv|mng|avi|mov|wmv|quv|rm|rmvb|viv|asf|amv|mp4|m4p|m4v|3gp|3g2|roq)";
 }

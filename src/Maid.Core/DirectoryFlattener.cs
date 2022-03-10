@@ -27,7 +27,7 @@ public class DirectoryFlattener
         _fileSystem = fileSystem;
     }
 
-    public void Flatten(string rootPath)
+    public void Flatten(string rootPath, bool moveFiles = false)
     {
         var subdirectories = new Stack<string>(_fileSystem.GetSubdirectories(rootPath));
         var filesToCopy = new List<string>();
@@ -44,7 +44,11 @@ public class DirectoryFlattener
         foreach (var file in filesToCopy)
         {
             var destinationFile = _fileSystem.GetUniqueNameForFile(file, rootPath);
-            _fileSystem.Copy(file, destinationFile);
+
+            if (moveFiles)
+                _fileSystem.Move(file, destinationFile);
+            else
+                _fileSystem.Copy(file, destinationFile);
         }
     }
 }
