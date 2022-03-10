@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using Maid.ConsoleApp.Abstractions;
+using Maid.Core;
 
-namespace Maid.ConsoleApp.Infrastructure;
-internal class OsFileSystem : IFileSystem
+namespace Maid.Infrastructure;
+
+public class OsFileSystem : IFileSystem
 {
     public string ChangePathRoot(string file, string rootPath) => Path.Combine(rootPath, Path.GetFileName(file));
 

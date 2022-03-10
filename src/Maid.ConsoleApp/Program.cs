@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using Maid.ConsoleApp;
-using Maid.ConsoleApp.Infrastructure;
+
+using Maid.Core;
+using Maid.Infrastructure;
 
 var flattener = new DirectoryFlattener(new OsFileSystem());
 
 flattener.Flatten("E:\\images");
 
 Console.WriteLine("Done");
-

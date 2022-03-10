@@ -23,6 +23,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Maid.ConsoleApp\Maid.ConsoleApp.csproj" />
+    <ProjectReference Include="..\Maid.Core\Maid.Core.csproj" />
+    <ProjectReference Include="..\Maid.Infrastructure\Maid.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
