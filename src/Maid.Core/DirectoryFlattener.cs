@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections;
+using Maid.Core.Utilities;
 
 namespace Maid.Core;
 
@@ -43,17 +43,8 @@ public class DirectoryFlattener
 
         foreach (var file in filesToCopy)
         {
-            var destinationFile = GetUniqueNameForFile(file, rootPath);
+            var destinationFile = _fileSystem.GetUniqueNameForFile(file, rootPath);
             _fileSystem.Copy(file, destinationFile);
         }
-    }
-
-    private string GetUniqueNameForFile(string file, string rootPath)
-    {
-        if (!_fileSystem.FileWithSameNameExists(file, rootPath))
-            return _fileSystem.ChangePathRoot(file, rootPath);
-
-        var newFileName = Guid.NewGuid().ToString().Replace("-", string.Empty);
-        return _fileSystem.ChangePathRoot(_fileSystem.GetPathWithChangedFileName(file, newFileName), rootPath);
     }
 }

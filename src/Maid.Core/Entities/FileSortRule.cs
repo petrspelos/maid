@@ -14,17 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace Maid.Core;
+namespace Maid.Core.Entities;
 
-public interface IFileSystem
+public enum SpecialRule
 {
-    IEnumerable<string> GetSubdirectories(string path);
-    IEnumerable<string> GetFiles(string path);
-    bool FileWithSameNameExists(string file, string targetPath);
-    string GetPathWithChangedFileName(string file, string newName);
-    void Copy(string sourceFile, string destinationFile);
-    void Move(string sourceFile, string destinationFile);
-    void Delete(string sourceFile);
-    string ChangePathRoot(string file, string rootPath);
-    bool DirectoryExists(string path);
+    None,
+    Delete
 }
+
+public readonly record struct FileSortRule(string FileNamePattern, string DestinationDirectory, SpecialRule SpecialRule = SpecialRule.None);

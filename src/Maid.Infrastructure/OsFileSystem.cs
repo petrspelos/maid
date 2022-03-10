@@ -24,6 +24,10 @@ public class OsFileSystem : IFileSystem
 
     public void Copy(string sourceFile, string destinationFile) => File.Copy(sourceFile, destinationFile, false);
 
+    public void Move(string sourceFile, string destinationFile) => File.Move(sourceFile, destinationFile, false);
+
+    public void Delete(string sourceFile) => File.Delete(sourceFile);
+
     public IEnumerable<string> GetFiles(string path) => Directory.GetFiles(path);
 
     public bool FileWithSameNameExists(string file, string targetPath) => GetFiles(targetPath).Select(f => Path.GetFileName(f)).Contains(Path.GetFileName(file));
@@ -31,4 +35,6 @@ public class OsFileSystem : IFileSystem
     public string GetPathWithChangedFileName(string file, string newName) => Path.Combine(Path.GetDirectoryName(file)!, newName + Path.GetExtension(file));
 
     public IEnumerable<string> GetSubdirectories(string path) => Directory.GetDirectories(path);
+
+    public bool DirectoryExists(string path) => Directory.Exists(path);
 }

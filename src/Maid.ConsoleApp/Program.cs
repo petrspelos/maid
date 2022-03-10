@@ -16,10 +16,20 @@
 
 
 using Maid.Core;
+using Maid.Core.Entities;
 using Maid.Infrastructure;
 
-var flattener = new DirectoryFlattener(new OsFileSystem());
+var fileSorter = new FileSorter(new OsFileSystem());
 
-flattener.Flatten("E:\\images");
+fileSorter.AddRule(new(CommonFilePatterns.ImageFiles, @"C:\Users\micro\Pictures\sorted"));
+fileSorter.AddRule(new(CommonFilePatterns.SoundFiles, @"C:\Users\micro\Music"));
+fileSorter.AddRule(new(CommonFilePatterns.GimpFiles, @"C:\Users\micro\Documents\Gimp projects"));
+fileSorter.AddRule(new(CommonFilePatterns.PresentationFiles, @"C:\Users\micro\Documents\Presentations"));
+fileSorter.AddRule(new(CommonFilePatterns.ArchiveFiles, @"C:\Users\micro\Documents\Archives"));
+
+
+fileSorter.AddRule(new(CommonFilePatterns.WindowsShortcutFiles, string.Empty, SpecialRule.Delete));
+
+fileSorter.SortDirectory(@"C:\Users\micro\Desktop");
 
 Console.WriteLine("Done");
