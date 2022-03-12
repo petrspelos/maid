@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Text.RegularExpressions;
+using Maid.Core.Boundaries;
 using Maid.Core.Entities;
 using Maid.Core.Utilities;
 

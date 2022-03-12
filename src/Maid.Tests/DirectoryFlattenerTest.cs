@@ -16,6 +16,7 @@
 
 using System.IO;
 using Maid.Core;
+using Maid.Core.Boundaries;
 using Moq;
 using Xunit;
 

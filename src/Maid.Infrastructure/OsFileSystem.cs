@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using Maid.Core;
+using Maid.Core.Boundaries;
 
 namespace Maid.Infrastructure;
 

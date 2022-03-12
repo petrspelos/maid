@@ -44,6 +44,19 @@ fileSorter.SortDirectory(@"C:\Users\micro\Desktop");
 
 > 💡 My personal use is to first Flatten my Downloads directory (removing folders) and then sort the files
 
+- Drive Management
+
+```cs
+var driveProvider = new LogicalDriveProvider(new OsDriveInfo(), new JsonFileDriveIdentifier());
+
+// You can create a human-readable label for the drive
+// in order to be able to recognize the drive easier
+// since the path itself may change from OS to OS
+driveProvider.RegisterNewDrive("E:\\", "Abigail");
+
+var drives = driveProvider.GetRecognizedDrives();
+```
+
 ### Can I help?
 
 This is primarily a tool that I myself use, but if you have any suggestions, bug reports, or even pull requests, then go ahead. :relaxed:

@@ -14,12 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using Maid.Core.Entities;
 
-using Maid.Core;
-using Maid.Infrastructure;
+namespace Maid.Core.Boundaries;
 
-var driveProvider = new LogicalDriveProvider(new OsDriveInfo(), new JsonFileDriveIdentifier());
-
-var drives = driveProvider.GetRecognizedDrives();
-
-Console.WriteLine("Done");
+public interface IDriveIdentifier
+{
+    bool IsRecognized(string drivePath);
+    Drive? GetDriveFromPath(string drivePath);
+    void RegisterDrive(Drive drive);
+}

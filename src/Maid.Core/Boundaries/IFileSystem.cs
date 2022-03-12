@@ -14,12 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace Maid.Core.Boundaries;
 
-using Maid.Core;
-using Maid.Infrastructure;
-
-var driveProvider = new LogicalDriveProvider(new OsDriveInfo(), new JsonFileDriveIdentifier());
-
-var drives = driveProvider.GetRecognizedDrives();
-
-Console.WriteLine("Done");
+public interface IFileSystem
+{
+    IEnumerable<string> GetSubdirectories(string path);
+    IEnumerable<string> GetFiles(string path);
+    bool FileWithSameNameExists(string file, string targetPath);
+    string GetPathWithChangedFileName(string file, string newName);
+    void Copy(string sourceFile, string destinationFile);
+    void Move(string sourceFile, string destinationFile);
+    void Delete(string sourceFile);
+    string ChangePathRoot(string file, string rootPath);
+    bool DirectoryExists(string path);
+}
