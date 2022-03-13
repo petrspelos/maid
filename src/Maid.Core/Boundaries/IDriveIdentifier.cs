@@ -23,4 +23,5 @@ public interface IDriveIdentifier
     bool IsRecognized(string drivePath);
     Drive? GetDriveFromPath(string drivePath);
     void RegisterDrive(Drive drive);
+    void UpdateDrive(Drive drive);
 }

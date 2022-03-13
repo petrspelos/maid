@@ -40,4 +40,15 @@ public class LogicalDriveProvider
 
         _driveIdentifier.RegisterDrive(new(Guid.NewGuid(), label, drivePath));
     }
+
+    public void SaveDriveChanges(Drive drive)
+    {
+        if (!_driveInfo.GetDrivePaths().Any(dp => dp == drive.DrivePath))
+            throw new DriveNotFoundException($"The following path is not any connected drive's root path: {drive.DrivePath}");
+
+        if (_driveIdentifier.GetDriveFromPath(drive.DrivePath)?.DriveId != drive.DriveId)
+            throw new InvalidOperationException("A DriveId cannot be changed.");
+
+        _driveIdentifier.UpdateDrive(drive);
+    }
 }

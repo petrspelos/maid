@@ -16,20 +16,4 @@
 
 namespace Maid.Core.Entities;
 
-public record class Drive
-{
-    public Drive(Guid driveId, string driveLabel, string drivePath)
-    {
-        DriveId = driveId;
-        DriveLabel = driveLabel;
-        DrivePath = drivePath;
-    }
-
-    public Guid DriveId { get; init; }
-
-    public string DriveLabel { get; init; } = string.Empty;
-
-    public string DrivePath { get; init; } = string.Empty;
-
-    public ICollection<Gallery> Galleries { get; init; } = new List<Gallery>();
-}
+public record class Tag(Guid Id, string Name);

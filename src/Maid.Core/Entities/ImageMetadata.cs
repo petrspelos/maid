@@ -16,20 +16,10 @@
 
 namespace Maid.Core.Entities;
 
-public record class Drive
+public record class ImageMetadata
 {
-    public Drive(Guid driveId, string driveLabel, string drivePath)
-    {
-        DriveId = driveId;
-        DriveLabel = driveLabel;
-        DrivePath = drivePath;
-    }
-
-    public Guid DriveId { get; init; }
-
-    public string DriveLabel { get; init; } = string.Empty;
-
-    public string DrivePath { get; init; } = string.Empty;
-
-    public ICollection<Gallery> Galleries { get; init; } = new List<Gallery>();
+    public ICollection<ImageMetadata> Variants { get; init; } = new List<ImageMetadata>();
+    public ICollection<Guid> TagIds { get; init; } = new List<Guid>();
+    public IDictionary<string, string> CustomProperties { get; init; } = new Dictionary<string, string>();
+    public string FileName { get; init; } = string.Empty;
 }

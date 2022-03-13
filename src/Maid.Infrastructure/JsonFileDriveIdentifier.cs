@@ -58,4 +58,6 @@ public class JsonFileDriveIdentifier : IDriveIdentifier
         var json = JsonSerializer.Serialize(drive);
         File.WriteAllText(Path.Combine(drive.DrivePath, IdentifierFileName), json);
     }
+
+    public void UpdateDrive(Drive drive) => WriteDriveInfo(drive);
 }
