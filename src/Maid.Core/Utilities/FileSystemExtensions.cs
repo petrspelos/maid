@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Text.RegularExpressions;
 using Maid.Core.Boundaries;
 
 namespace Maid.Core.Utilities;
@@ -27,5 +28,16 @@ internal static class FileSystemExtensions
 
         var newFileName = Guid.NewGuid().ToString().Replace("-", string.Empty);
         return fileSystem.ChangePathRoot(fileSystem.GetPathWithChangedFileName(file, newFileName), rootPath);
+    }
+
+    internal static string GetPathNameForFile(this IFileSystem fileSystem, string file, string rootPath)
+    {
+        // Calculate the length of rootPath without trailing slash/backslash
+        // This is used to truncate the root part of the file path.
+        int rootPathLength = rootPath.Length + (rootPath.EndsWith("\\") || rootPath.EndsWith("/") ? 0 : 1);
+
+        string subPath = file.Substring(rootPathLength);
+        subPath = Regex.Replace(subPath, @"(\\|/)", "-");
+        return Path.Combine(rootPath, subPath);
     }
 }
