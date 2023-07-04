@@ -19,7 +19,10 @@ flattener.Flatten("E:\\images");
 
 // by default, Flatten copies files
 // this behavior can be changed
-flattener.Flatten("E:\\images", moveFiles: true);
+// directoryToUniqueName folds the directory structure
+// to generate unique names instead of GUID on conflict
+// C:/root/foo/bar/baz.rar will become C:/root/foo-bar-baz.rar
+flattener.Flatten("E:\\images", moveFiles: true, directoryToUniqueName: true);
 ```
 
 > 💡 Will not overwrite other files because if the flattened file name collides with another it is renamed to a new GUID name instead.
