@@ -38,4 +38,9 @@ public class OsFileSystem : IFileSystem
     public IEnumerable<string> GetSubdirectories(string path) => Directory.GetDirectories(path);
 
     public bool DirectoryExists(string path) => Directory.Exists(path);
+
+    public IEnumerable<string> GetFilesRecursive(string path) => Directory.GetFiles(path, "*", new EnumerationOptions() {
+        RecurseSubdirectories = true,
+        IgnoreInaccessible = true
+    });
 }

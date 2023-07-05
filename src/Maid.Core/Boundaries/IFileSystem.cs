@@ -20,6 +20,7 @@ public interface IFileSystem
 {
     IEnumerable<string> GetSubdirectories(string path);
     IEnumerable<string> GetFiles(string path);
+    IEnumerable<string> GetFilesRecursive(string path);
     bool FileWithSameNameExists(string file, string targetPath);
     string GetPathWithChangedFileName(string file, string newName);
     void Copy(string sourceFile, string destinationFile);

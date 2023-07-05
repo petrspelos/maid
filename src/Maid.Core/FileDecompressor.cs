@@ -15,21 +15,54 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using Maid.Core.Boundaries;
-using Maid.Core.Utilities;
 
 namespace Maid.Core;
 
 public class FileDecompressor
 {
     private readonly IFileSystem _fileSystem;
+    private readonly IFileCompression _compression;
 
-    public FileDecompressor(IFileSystem fileSystem)
+    public FileDecompressor(IFileSystem fileSystem, IFileCompression fileCompression)
     {
         _fileSystem = fileSystem;
+        _compression = fileCompression;
     }
+
+    public Action<string>? Logger { get; set; }
 
     public void Decompress(string rootPath, bool recursive = false)
     {
+        var files = GetFiles(rootPath, recursive);
 
+        foreach (var file in files)
+        {
+            var extension = Path.GetExtension(file);
+
+            switch (extension)
+            {
+                case ".zip":
+                    Logger?.Invoke($".zip strategy chosen for: {file}");
+                    _compression.DecompressZipInPlace(file, rootPath);
+                    break;
+                case ".7z":
+                    Logger?.Invoke($"7zip strategy chosen for: {file}");
+                    _compression.Decompress7ZipInPlace(file, rootPath);
+                    break;
+                default:
+                    continue;
+            }
+        }
+    }
+
+    private IEnumerable<string> GetFiles(string rootPath, bool recursive)
+    {
+        if (!_fileSystem.DirectoryExists(rootPath))
+        {
+            throw new ArgumentException("Provided root path does not exist.");
+        }
+
+        return recursive ? _fileSystem.GetFilesRecursive(rootPath) : _fileSystem.GetFiles(rootPath);
     }
 }
+

@@ -16,6 +16,9 @@
 
 namespace Maid.Core.Boundaries;
 
-public interface IFileCopmression
+public interface IFileCompression
 {
+    void DecompressZipInPlace(string zipPath, string rootPath);
+
+    void Decompress7ZipInPlace(string zipPath, string rootPath);
 }
