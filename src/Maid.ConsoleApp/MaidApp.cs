@@ -8,14 +8,15 @@ namespace Maid.ConsoleApp;
 
 public sealed class MaidApp : IHostedService
 {
+    private readonly IFileSystem _fileSystem;
+    private readonly FileDecompressor _fileDecompressor;
     private readonly MaidOptions _cfg;
 
-    private readonly IFileSystem _fileSystem;
-
-    public MaidApp(IOptions<MaidOptions> cfg, IFileSystem fileSystem)
+    public MaidApp(IFileSystem fileSystem, FileDecompressor fileDecompressor, IOptions<MaidOptions> cfg)
     {
-        _cfg = cfg.Value;
         _fileSystem = fileSystem;
+        _fileDecompressor = fileDecompressor;
+        _cfg = cfg.Value;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -74,9 +75,8 @@ public sealed class MaidApp : IHostedService
         void RunDecompress()
         {
             PrintCol($"Decompress: recursive: {_cfg.Recursive}", ConsoleColor.Black, ConsoleColor.Yellow);
-            var decompressor = new FileDecompressor(fileSystem, new WindowsFileCompression(fileSystem));
-            decompressor.Logger += (msg) => PrintCol(msg, ConsoleColor.DarkBlue, ConsoleColor.White);
-            decompressor.Decompress(_cfg.Path, recursive: _cfg.Recursive);
+            _fileDecompressor.Logger += (msg) => PrintCol(msg, ConsoleColor.DarkBlue, ConsoleColor.White);
+            _fileDecompressor.Decompress(_cfg.Path, recursive: _cfg.Recursive);
         }
 
         void PrintCol(string message, ConsoleColor fg, ConsoleColor bg)

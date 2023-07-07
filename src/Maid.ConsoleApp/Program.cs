@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using Maid.ConsoleApp;
+using Maid.Core;
 using Maid.Core.Boundaries;
 using Maid.Infrastructure;
 using Microsoft.Extensions.Configuration;
@@ -35,7 +36,9 @@ var builder = new HostBuilder()
             .ConfigureServices((hostContext, services) =>
             {
                 services.Configure<MaidOptions>(hostContext.Configuration);
-                services.AddSingleton<IFileSystem, OsFileSystem>();
+                services.AddTransient<IFileSystem, OsFileSystem>();
+                services.AddTransient<IFileCompression, WindowsFileCompression>();
+                services.AddTransient<FileDecompressor>();
                 services.AddHostedService<MaidApp>();
             });
 
