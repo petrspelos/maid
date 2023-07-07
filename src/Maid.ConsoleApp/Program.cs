@@ -21,6 +21,7 @@ using Maid.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 var builder = new HostBuilder()
             .ConfigureAppConfiguration((hostingContext, config) =>
@@ -37,10 +38,15 @@ var builder = new HostBuilder()
             {
                 services.Configure<MaidOptions>(hostContext.Configuration);
                 services.AddTransient<IFileSystem, OsFileSystem>();
+                services.AddTransient(typeof(IMaidLogger<>), typeof(MicrosoftMaidLogger<>));
                 services.AddTransient<IFileCompression, WindowsFileCompression>();
                 services.AddTransient<FileDecompressor>();
                 services.AddTransient<DirectoryFlattener>();
                 services.AddHostedService<MaidApp>();
+            })
+            .ConfigureLogging((hostingContext, logging) =>
+            {
+                logging.AddConsole();
             });
 
 builder.Build().Run();

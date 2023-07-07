@@ -2,19 +2,22 @@ using Maid.Core;
 using Maid.Core.Boundaries;
 using Maid.Infrastructure;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Maid.ConsoleApp;
 
 public sealed class MaidApp : IHostedService
 {
+    private readonly ILogger<MaidApp> _logger;
     private readonly IFileSystem _fileSystem;
     private readonly FileDecompressor _fileDecompressor;
     private readonly DirectoryFlattener _directoryFlattener;
     private readonly MaidOptions _cfg;
 
-    public MaidApp(IFileSystem fileSystem, FileDecompressor fileDecompressor, DirectoryFlattener directoryFlattener, IOptions<MaidOptions> cfg)
+    public MaidApp(ILogger<MaidApp> logger, IFileSystem fileSystem, FileDecompressor fileDecompressor, DirectoryFlattener directoryFlattener, IOptions<MaidOptions> cfg)
     {
+        _logger = logger;
         _fileSystem = fileSystem;
         _fileDecompressor = fileDecompressor;
         _directoryFlattener = directoryFlattener;
@@ -27,17 +30,17 @@ public sealed class MaidApp : IHostedService
 
         if (string.IsNullOrWhiteSpace(_cfg.Command))
         {
-            Console.WriteLine("USAGE: maid.exe --command=[flat|sort|unzip] <options>");
+            _logger.LogInformation("USAGE: maid.exe --command=[flat|sort|unzip] <options>");
             Environment.Exit(0);
         }
 
         if (!_fileSystem.DirectoryExists(_cfg.Path))
         {
-            Console.WriteLine($"The path doesn't exist: {_cfg.Path}");
+            _logger.LogWarning($"The path doesn't exist: {_cfg.Path}");
             Environment.Exit(0);
         }
 
-        PrintCol($"PATH: '{_cfg.Path}'", ConsoleColor.Black, ConsoleColor.Blue);
+        _logger.LogInformation($"PATH: '{_cfg.Path}'");
 
         switch (_cfg.Command)
         {
@@ -54,7 +57,7 @@ public sealed class MaidApp : IHostedService
 
         void RunFlatten()
         {
-            PrintCol($"Flatten: moveFiles: {_cfg.MoveDontCopy}, directoryToUniqueName: {_cfg.PathToName}", ConsoleColor.Black, ConsoleColor.Yellow);
+            _logger.LogInformation($"Flatten: moveFiles: {_cfg.MoveDontCopy}, directoryToUniqueName: {_cfg.PathToName}");
             _directoryFlattener.Flatten(_cfg.Path, moveFiles: _cfg.MoveDontCopy, directoryToUniqueName: _cfg.PathToName);
         }
 
@@ -75,20 +78,11 @@ public sealed class MaidApp : IHostedService
 
         void RunDecompress()
         {
-            PrintCol($"Decompress: recursive: {_cfg.Recursive}", ConsoleColor.Black, ConsoleColor.Yellow);
-            _fileDecompressor.Logger += (msg) => PrintCol(msg, ConsoleColor.DarkBlue, ConsoleColor.White);
+            _logger.LogInformation($"Decompress: recursive: {_cfg.Recursive}");
             _fileDecompressor.Decompress(_cfg.Path, recursive: _cfg.Recursive);
         }
 
-        void PrintCol(string message, ConsoleColor fg, ConsoleColor bg)
-        {
-            Console.BackgroundColor = bg;
-            Console.ForegroundColor = fg;
-            Console.WriteLine(message);
-            Console.ResetColor();
-        }
-
-        Console.WriteLine("Done");
+        _logger.LogInformation("Done");
         Environment.Exit(0);
         return Task.CompletedTask;
     }

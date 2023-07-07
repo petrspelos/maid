@@ -20,16 +20,16 @@ namespace Maid.Core;
 
 public class FileDecompressor
 {
+    private readonly IMaidLogger<FileDecompressor> _logger;
     private readonly IFileSystem _fileSystem;
     private readonly IFileCompression _compression;
 
-    public FileDecompressor(IFileSystem fileSystem, IFileCompression fileCompression)
+    public FileDecompressor(IMaidLogger<FileDecompressor> logger, IFileSystem fileSystem, IFileCompression fileCompression)
     {
+        _logger = logger;
         _fileSystem = fileSystem;
         _compression = fileCompression;
     }
-
-    public Action<string>? Logger { get; set; }
 
     public void Decompress(string rootPath, bool recursive = false)
     {
@@ -42,11 +42,11 @@ public class FileDecompressor
             switch (extension)
             {
                 case ".zip":
-                    Logger?.Invoke($".zip strategy chosen for: {file}");
+                    _logger.LogInformation($".zip strategy chosen for: {file}");
                     _compression.DecompressZipInPlace(file, rootPath);
                     break;
                 case ".7z":
-                    Logger?.Invoke($"7zip strategy chosen for: {file}");
+                    _logger.LogInformation($"7zip strategy chosen for: {file}");
                     _compression.Decompress7ZipInPlace(file, rootPath);
                     break;
                 default:

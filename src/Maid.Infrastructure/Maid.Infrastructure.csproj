@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Maid.Core\Maid.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+  </ItemGroup>
+
 </Project>
