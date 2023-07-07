@@ -39,6 +39,7 @@ var builder = new HostBuilder()
                 services.AddTransient<IFileSystem, OsFileSystem>();
                 services.AddTransient<IFileCompression, WindowsFileCompression>();
                 services.AddTransient<FileDecompressor>();
+                services.AddTransient<DirectoryFlattener>();
                 services.AddHostedService<MaidApp>();
             });
 

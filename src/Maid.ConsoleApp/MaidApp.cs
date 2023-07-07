@@ -10,12 +10,14 @@ public sealed class MaidApp : IHostedService
 {
     private readonly IFileSystem _fileSystem;
     private readonly FileDecompressor _fileDecompressor;
+    private readonly DirectoryFlattener _directoryFlattener;
     private readonly MaidOptions _cfg;
 
-    public MaidApp(IFileSystem fileSystem, FileDecompressor fileDecompressor, IOptions<MaidOptions> cfg)
+    public MaidApp(IFileSystem fileSystem, FileDecompressor fileDecompressor, DirectoryFlattener directoryFlattener, IOptions<MaidOptions> cfg)
     {
         _fileSystem = fileSystem;
         _fileDecompressor = fileDecompressor;
+        _directoryFlattener = directoryFlattener;
         _cfg = cfg.Value;
     }
 
@@ -53,8 +55,7 @@ public sealed class MaidApp : IHostedService
         void RunFlatten()
         {
             PrintCol($"Flatten: moveFiles: {_cfg.MoveDontCopy}, directoryToUniqueName: {_cfg.PathToName}", ConsoleColor.Black, ConsoleColor.Yellow);
-            var flattener = new DirectoryFlattener(fileSystem);
-            flattener.Flatten(_cfg.Path, moveFiles: _cfg.MoveDontCopy, directoryToUniqueName: _cfg.PathToName);
+            _directoryFlattener.Flatten(_cfg.Path, moveFiles: _cfg.MoveDontCopy, directoryToUniqueName: _cfg.PathToName);
         }
 
         void RunSorting()
