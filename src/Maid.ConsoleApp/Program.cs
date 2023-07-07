@@ -14,85 +14,29 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-using Maid.Core;
-using Maid.Core.Entities;
+using Maid.ConsoleApp;
+using Maid.Core.Boundaries;
 using Maid.Infrastructure;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-var fileSystem = new OsFileSystem();
+var builder = new HostBuilder()
+            .ConfigureAppConfiguration((hostingContext, config) =>
+            {
+                config.AddJsonFile("appsettings.json", optional: true);
+                config.AddEnvironmentVariables();
 
-if (args.Length < 2)
-{
-    Console.WriteLine("USAGE: maid.exe c:/path_to_clean [command]");
-    Environment.Exit(0);
-}
+                if (args != null)
+                {
+                    config.AddCommandLine(args);
+                }
+            })
+            .ConfigureServices((hostContext, services) =>
+            {
+                services.Configure<MaidOptions>(hostContext.Configuration);
+                services.AddSingleton<IFileSystem, OsFileSystem>();
+                services.AddHostedService<MaidApp>();
+            });
 
-var rootPath = args[0];
-
-if (!fileSystem.DirectoryExists(rootPath))
-{
-    Console.WriteLine($"The path: '{rootPath}' does not exist");
-    Environment.Exit(-1);
-}
-
-PrintCol($"PATH: '{rootPath}'", ConsoleColor.Black, ConsoleColor.Blue);
-
-var cmd = args[1];
-PrintCol($"CMD: '{cmd}'", ConsoleColor.Black, ConsoleColor.Green);
-
-switch (cmd)
-{
-    case "flat":
-        RunFlatten();
-        break;
-    case "sort":
-        RunSorting();
-        break;
-    case "unzip":
-        RunDecompress();
-        break;
-}
-
-void RunFlatten()
-{
-    PrintCol($"Flatten: moveFiles: {ArgIsSet("--move-dont-copy")}, directoryToUniqueName: {ArgIsSet("--path-to-name")}", ConsoleColor.Black, ConsoleColor.Yellow);
-    var flattener = new DirectoryFlattener(fileSystem);
-    flattener.Flatten(rootPath, moveFiles: ArgIsSet("--move-dont-copy"), directoryToUniqueName: ArgIsSet("--path-to-name"));
-}
-
-void RunSorting()
-{
-    throw new NotImplementedException("Sorting configuration not yet implemented");
-    // var fileSorter = new FileSorter(new OsFileSystem());
-
-    // fileSorter.AddRule(new(CommonFilePatterns.ImageFiles, @"C:\Users\micro\Pictures\sorted"));
-    // fileSorter.AddRule(new(CommonFilePatterns.SoundFiles, @"C:\Users\micro\Music"));
-    // fileSorter.AddRule(new(CommonFilePatterns.GimpFiles, @"C:\Users\micro\Documents\Gimp projects"));
-    // fileSorter.AddRule(new(CommonFilePatterns.PresentationFiles, @"C:\Users\micro\Documents\Presentations"));
-    // fileSorter.AddRule(new(CommonFilePatterns.ArchiveFiles, @"C:\Users\micro\Documents\Archives"));
-    // fileSorter.AddRule(new(CommonFilePatterns.WindowsShortcutFiles, string.Empty, SpecialRule.Delete));
-
-    // fileSorter.SortDirectory(rootPath);
-}
-
-void RunDecompress()
-{
-    PrintCol($"Decompress: recursive: {ArgIsSet("--recursive")}", ConsoleColor.Black, ConsoleColor.Yellow);
-    var decompressor = new FileDecompressor(fileSystem, new WindowsFileCompression(fileSystem));
-    decompressor.Logger += (msg) => PrintCol(msg, ConsoleColor.DarkBlue, ConsoleColor.White);
-    decompressor.Decompress(rootPath, recursive: ArgIsSet("--recursive"));
-}
-
-bool ArgIsSet(string arg) => args.Any(a => a == arg);
-
-string GetArgVal(string arg) => args.FirstOrDefault(a => a.StartsWith(arg))?.Substring(arg.Length) ?? string.Empty; 
-
-void PrintCol(string message, ConsoleColor fg, ConsoleColor bg)
-{
-    Console.BackgroundColor = bg;
-    Console.ForegroundColor = fg;
-    Console.WriteLine(message);
-    Console.ResetColor();
-}
-
-Console.WriteLine("Done");
+builder.Build().Run();
